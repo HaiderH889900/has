@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Knowledge Academy Of Science</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-red: #d32f2f;
+            --white: #ffffff;
+            --light-gray: #f4f4f4;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--light-gray);
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        /* Login Overlay */
+        #login-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--primary-red);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            color: white;
+        }
+
+        .login-box {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            color: #333;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        /* Flyout Animation */
+        @keyframes flyOut {
+            from { transform: translateX(-100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .main-container {
+            display: none; /* Hidden until login */
+            padding: 20px;
+            animation: flyOut 0.8s ease-out;
+        }
+
+        header {
+            background: var(--primary-red);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 0 0 20px 20px;
+            position: relative;
+        }
+
+        /* Settings Flyout */
+        .settings-menu {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            cursor: pointer;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            border-radius: 5px;
+            z-index: 10;
+            width: 150px;
+        }
+
+        .dropdown-content button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            background: none;
+            text-align: left;
+            cursor: pointer;
+            color: #333;
+        }
+
+        .dropdown-content button:hover { background: var(--light-gray); }
+
+        /* Form and Table Styles */
+        .card {
+            background: white;
+            margin: 20px auto;
+            padding: 20px;
+            max-width: 900px;
+            border-radius: 10px;
+            border-left: 8px solid var(--primary-red);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        button.btn-add {
+            background: var(--primary-red);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th { background: var(--primary-red); color: white; padding: 10px; }
+        td { padding: 10px; border-bottom: 1px solid #ddd; text-align: center; }
+
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+        }
+
+        .manager-signature {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.5rem;
+            color: var(--primary-red);
+        }
+
+        @media print {
+            .no-print { display: none; }
+            .main-container { display: block !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="login-overlay">
+        <div class="login-box">
+            <h2>Principal Login</h2>
+            <input type="text" id="username" placeholder="Username">
+            <input type="password" id="password" placeholder="Password">
+            <br><br>
+            <button class="btn-add" onclick="checkLogin()">Login</button>
+        </div>
+    </div>
+
+    <div class="main-container" id="app">
+        <header>
+            <h1>The Knowledge Academy Of Science</h1>
+            <p>Jallah Jeem</p>
+            <div class="settings-menu" onclick="toggleMenu()">
+                <div style="font-size: 24px; font-weight: bold;">&#8942;</div>
+                <div class="dropdown-content" id="myDropdown">
+                    <button onclick="scrollToForm()">Add Teacher</button>
+                    <button onclick="window.print()">Print Report</button>
+                </div>
+            </div>
+        </header>
+
+        <div class="card no-print">
+            <h3>Registration Form</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <input type="text" id="tName" placeholder="Teacher Name">
+                <input type="text" id="tSubject" placeholder="Subject">
+                <input type="text" id="tMobile" placeholder="Mobile Number">
+                <input type="date" id="tDate" placeholder="Joining Date">
+                <input type="number" id="tPay" placeholder="Basic Monthly Pay">
+                <input type="file" id="tImg" accept="image/*">
+            </div>
+            <button class="btn-add" onclick="addTeacher()">Register Teacher</button>
+        </div>
+
+        <div class="card">
+            <h3>Staff Records & Attendance</h3>
+            <table id="teacherTable">
+                <thead>
+                    <tr>
+                        <th>Photo</th>
+                        <th>Name</th>
+                        <th>Subject</th>
+                        <th>Basic Pay</th>
+                        <th>Absents</th>
+                        <th>Net Salary</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    </tbody>
+            </table>
+        </div>
+
+        <div class="footer">
+            <p>Produce By IT Manager</p>
+            <p class="manager-signature">Hasnain Haider</p>
+            <p>Cell: 0301-4464374</p>
+        </div>
+    </div>
+
+    <script>
+        let teachers = JSON.parse(localStorage.getItem('teacherData')) || [];
+
+        function checkLogin() {
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+            if(user === "Admin" && pass === "7890") {
+                document.getElementById('login-overlay').style.display = 'none';
+                document.getElementById('app').style.display = 'block';
+                renderTable();
+            } else {
+                alert("Access Denied!");
+            }
+        }
+
+        function toggleMenu() {
+            const dd = document.getElementById('myDropdown');
+            dd.style.display = dd.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function addTeacher() {
+            const name = document.getElementById('tName').value;
+            const subject = document.getElementById('tSubject').value;
+            const pay = document.getElementById('tPay').value;
+            
+            if(!name || !pay) return alert("Please fill details");
+
+            const newTeacher = {
+                id: Date.now(),
+                name,
+                subject,
+                pay: parseFloat(pay),
+                absents: 0,
+                img: 'https://via.placeholder.com/50'
+            };
+
+            teachers.push(newTeacher);
+            saveAndRender();
+        }
+
+        function updateAttendance(id, change) {
+            const t = teachers.find(t => t.id === id);
+            t.absents = Math.max(0, t.absents + change);
+            saveAndRender();
+        }
+
+        function deleteTeacher(id) {
+            teachers = teachers.filter(t => t.id !== id);
+            saveAndRender();
+        }
+
+        function saveAndRender() {
+            localStorage.setItem('teacherData', JSON.stringify(teachers));
+            renderTable();
+        }
+
+        function renderTable() {
+            const tbody = document.querySelector('#teacherTable tbody');
+            tbody.innerHTML = '';
+            teachers.forEach(t => {
+                const perDay = t.pay / 30;
+                const deduction = perDay * t.absents;
+                const netSalary = Math.round(t.pay - deduction);
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td><img src="${t.img}" width="40" style="border-radius:50%"></td>
+                        <td>${t.name}</td>
+                        <td>${t.subject}</td>
+                        <td>${t.pay}</td>
+                        <td>
+                            <button onclick="updateAttendance(${t.id}, 1)">+</button>
+                            ${t.absents}
+                            <button onclick="updateAttendance(${t.id}, -1)">-</button>
+                        </td>
+                        <td><strong>${netSalary}</strong></td>
+                        <td><button onclick="deleteTeacher(${t.id})" style="color:red">Remove</button></td>
+                    </tr>
+                `;
+            });
+        }
+
+        function scrollToForm() {
+            document.querySelector('.no-print').scrollIntoView();
+        }
+    </script>
+</body>
+</html>
